@@ -1,0 +1,7 @@
+tracing:
+  jaeger:
+    endpoint: "http://localhost:14250"  # Thay đổi theo môi trường của bạn
+    sampler: always_on
+otel:
+  service:
+    name: service-a
