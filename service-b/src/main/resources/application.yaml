@@ -1,6 +1,6 @@
 tracing:
   jaeger:
-    endpoint: "http://localhost:14250"  # Thay đổi theo môi trường của bạn
+    endpoint: "http://localhost:4317"  # Thay đổi theo môi trường của bạn
     sampler: always_on
     serviceName: service-b
 

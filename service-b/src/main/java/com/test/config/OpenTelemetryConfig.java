@@ -3,7 +3,7 @@ package com.test.config;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.exporter.jaeger.JaegerGrpcSpanExporter;
+import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
@@ -47,15 +47,15 @@ public class OpenTelemetryConfig {
         Resource resource = Resource.getDefault().toBuilder()
             .put(ServiceAttributes.SERVICE_NAME, appProperties.getServiceName())
             .build();
-        // Tạo Jaeger Exporter
-        JaegerGrpcSpanExporter jaegerExporter = JaegerGrpcSpanExporter.builder()
+       // Tạo Jaeger Exporter
+        OtlpGrpcSpanExporter otlpExporter = OtlpGrpcSpanExporter.builder()
                 .setEndpoint(appProperties.getEndpoint()) // Jaeger gRPC endpoint
                 .build();
 
         // Cấu hình SdkTracerProvider với Jaeger Exporter
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
                 .setResource(resource)
-                .addSpanProcessor(SimpleSpanProcessor.create(jaegerExporter)) // Thêm exporter vào span processor
+                .addSpanProcessor(SimpleSpanProcessor.create(otlpExporter)) // Thêm exporter vào span processor
                 .build();
 
         // Thiết lập OpenTelemetry SDK
