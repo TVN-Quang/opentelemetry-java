@@ -2,6 +2,7 @@ package com.test.servicea;
 import com.test.constants.AppConstants;
 import com.test.config.AppProperties;
 import com.test.tracing.Traceable;
+import com.test.logging.LogService;
 // opentelemetry import
 // import io.opentelemetry.api.GlobalOpenTelemetry;
 // import io.opentelemetry.api.metrics.LongCounter;
@@ -36,11 +37,13 @@ public class ServiceAApplication {
     private final ServiceAApplication self;
     private final Tracer tracer;
     private final RestTemplate restTemplate;
+    private final LogService logService;
 
-    public ServiceAApplication(@Lazy ServiceAApplication self,Tracer tracer, RestTemplate restTemplate) {
+    public ServiceAApplication(@Lazy ServiceAApplication self,Tracer tracer, RestTemplate restTemplate, LogService logService) {
         this.tracer = tracer;
         this.self = self;
         this.restTemplate = restTemplate;
+        this.logService = logService;
     }
 
     public static void main(String[] args) {
@@ -54,8 +57,12 @@ public class ServiceAApplication {
         // requestCounter.add(1);
         // Tạo span để theo dõi trace của Service A
         try {
+            logService.info("info: /api/service-a" );
             System.out.println("Service A: Nhận request, gọi Service B...");
             String responseB = self.funcF();
+   
+            logService.warn("warn: " + responseB);
+            logService.error("warn: " + responseB);
           
             return "Service A response, got from Service B: " + responseB;
         } catch (Exception e) {
@@ -68,6 +75,7 @@ public class ServiceAApplication {
         System.out.println("answer");
           // Gọi Service B qua DNS nội bộ trên k8s (tên service: service-b)
             String serviceBUrl = "http://localhost:8081/api/service-b";
+            logService.info("info: funcf");
             String responseB = restTemplate.getForObject(serviceBUrl, String.class);
             return responseB;
     }
